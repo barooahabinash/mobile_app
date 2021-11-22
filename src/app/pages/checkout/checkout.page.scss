@@ -1,0 +1,66 @@
+.txtaligntop{
+    align-items: flex-start;
+}
+
+.listborder{
+    border: 1px solid rgb(224, 216, 216);
+}
+
+.checkoutpagepadding
+{
+    padding: 5%;
+}
+.outofstockproducts
+{
+    margin-top:2%;
+    margin-left:5%;
+    margin-right:2%;
+    background-color:#FFB6C1;
+    border: 2px solid rgb(233, 120, 120);
+    border-radius: 5px;
+
+}
+.alteredproducts
+{
+    margin-top:2%;
+    margin-left:5%;
+    margin-right:2%;
+    background-color:#F2DA94;
+    border: 2px solid #C6AE65;
+    border-radius: 5px;
+
+}
+.flashmsg
+{
+    margin-top:2%;
+    margin-left:5%;
+    margin-right:2%;
+    background-color:#fff8e2;
+    border: 2px solid #C6AE65;
+    border-radius: 5px;
+
+}
+  .discount_code_label
+  {
+    font-weight: bold;
+    color: black;
+  } 
+  .discount_code_field ion-item {
+    --border-width: 1px 1px 1px 1px;
+    --border-radius: 5px 5px 5px 5px;
+    //--border-color: var(--ion-color-danger, #f1453d);
+    margin-top: 5px;
+  }
+  .discount_code_field ion-item.ion-invalid {
+    --highlight-background: none;
+  }
+  .discount_code_field ion-item.ion-valid {
+    --highlight-background: none;
+  }
+  .discount_code_button
+  {
+    width: 100%;
+    height: 48px;
+    margin-top: 24px;
+    font-size: larger;
+  }

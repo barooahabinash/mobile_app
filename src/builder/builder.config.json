@@ -1,0 +1,48 @@
+{
+    "config": "",
+    "clientUrl": "",
+    "clientAppName": "",
+    "identifierKey": "",
+    "clients": {
+        "demo": {
+            "appName": "visualsoft",
+            "url": "https://demo.visualsoft.co.uk"
+        },
+        "triads": {
+            "appName": "triads",
+            "url": "https://www.triads.co.uk"
+        },
+        "breathingspace": {
+            "appName": "breathingspace",
+            "url": "https://www.breathingspace.co.uk"
+        },
+        "acotisdiamonds": {
+            "appName": "acotisdiamonds",
+            "url": "https://www.acotisdiamonds.co.uk"
+        },
+        "stringsdirect": {
+            "appName": "stringsdirect",
+            "url": "https://www.stringsdirect.co.uk"
+        },
+        "julesb": {
+            "appName": "julesb",
+            "url": "https://www.julesb.co.uk"
+        },
+        "bigboys": {
+            "appName": "bigboys",
+            "url": "https://www.bigboys.co.uk"
+        },
+        "cakecraftcompany": {
+            "appName": "cakecraftcompany",
+            "url": "https://www.cakecraftcompany.com"
+        },
+        "11degrees": {
+            "appName": "11degrees",
+            "url": "https://www.11degrees.com"
+        },
+        "80scasualclassics": {
+            "appName": "80scasualclassics",
+            "url": "https://www.80scasualclassics.co.uk"
+        }
+    }
+}

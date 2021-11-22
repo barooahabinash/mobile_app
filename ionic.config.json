@@ -1,0 +1,7 @@
+{
+  "name": "VSMobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

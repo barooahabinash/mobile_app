@@ -1,0 +1,20 @@
+<ion-header>
+    <ion-toolbar>
+            <ion-title style="text-align:center">{{dataService.menu_submenu_clicked_data[dataService.menu_submenu_clicked_data.length -1].display_name}}</ion-title>
+            <ion-buttons slot="start">
+                <ion-back-button *ngIf="dataService.menu_submenu_clicked_data.length == 1"></ion-back-button>
+                <ion-button  *ngIf="dataService.menu_submenu_clicked_data.length > 1" (click)= "movetoPreviousSubMenu()">
+                    <ion-icon name="arrow-back" style="zoom:1.3;"></ion-icon>
+                </ion-button> 
+            </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content *ngIf="this.ApiConnectionService.onlineStatus" scrollEvents="true">
+    <ion-item-group *ngFor="let submenuone_data of submenu_data; let k = index" class="submenuborder" (click) = "navigateFromSubMenuOne(submenuone_data)">
+            <ion-item class="submenu-item" lines="none"><span [style]="'padding-left: 0px;'+submenuone_data.style" [innerHTML]="submenuone_data.display_name"></span><span style="padding-right: 0px;padding-top: 5px;" slot="end"><ion-icon  src="/assets/icon/chevron_right.svg" slot="icon-only" no-margin></ion-icon></span></ion-item>
+    </ion-item-group>
+</ion-content>
+ <!-- Internnet Connection Check section-->
+ <app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>
+
+

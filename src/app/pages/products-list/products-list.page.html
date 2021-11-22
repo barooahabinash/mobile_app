@@ -1,0 +1,85 @@
+
+<ion-menu side="end" menuId="products-list" contentId="main" class="my-custom-menu">
+  <ion-content>
+    <app-cart></app-cart>
+  </ion-content>
+</ion-menu>
+<ion-router-outlet id="main"></ion-router-outlet>
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-searchbar placeholder="What are you looking for?" (search)="toSearchPage()" [(ngModel)]="searchValue"></ion-searchbar>   
+    <ion-buttons slot="end">
+      <ion-button id="notification-button" (click) = "openCustom()">
+        <ion-icon src="/assets/icon/bag.svg" slot="icon-only" no-margin class="white top-btn"></ion-icon>
+        <ion-badge id="notifications-badge" color="danger">{{CartService.cartCount}}</ion-badge>
+      </ion-button>  
+    </ion-buttons>   
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="this.ApiConnectionService.onlineStatus && viewEntered">
+  <ion-grid style="width: 100%;">
+    <ion-row style="width: 100%;">
+      <ion-col style="text-align:center;font-weight: bold;font-size: x-large;">
+        <span  [innerHTML]="dataService.product_list_header == ''?'Products-list':dataService.product_list_header"></span>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div class="product_count_filter" *ngIf="filters_data.length!==0" >
+    <div class="product_filter" (click) = "createPopover()"><ion-icon  src="/assets/icon/filters.svg" style="zoom:1.3;margin-right: 10px;"></ion-icon><span style="top: -5px;position: relative;">Filters</span></div>
+    <!--
+      <div *ngIf="filters_data.length!==0" class="product_count" style="width: 50%;">{{more_status==true?append_item+'+':append_item}} Items</div>  
+    
+      <div *ngIf="filters_data.length==0" class="product_count" style="width:100%">{{more_status==true?append_item+'+':append_item}} Items</div>  
+      -->
+   </div>
+   <ion-grid>
+          <ion-row>
+              <ion-col *ngFor="let data of recieved_data;" size="6" style="text-align:left;">
+                  <ion-card class="card product_ion_card_col" no-margin (click)="open(data)">
+                      <!--use this badge in case you want to show sashes
+                      <ion-badge class="badge" *ngIf="data.offer">{{data.discount}}%</ion-badge> -->
+                       <ion-card-header style="text-align: left;">
+                            <div [style]="'position: relative;display: inline-block;min-width:'+image_modified_details.width+'px;'+'min-height:'+image_modified_details.height+'px;'">
+                                <ion-img [src]="ApiConnectionService.client_url+data.image" [alt]="data.name"  (ionImgDidLoad)="productListImage = true"></ion-img>
+                                <span *ngIf="((data.sash_location) && data.sash_location !='' && (data.sash_style) && data.sash_style !='')" [class]="'sash_position_'+data.sash_location" [style]="(data.sash_location == 't' || data.sash_location== 'b')? data.sash_style+'width:'+image_modified_details.width+'px;' :data.sash_style">{{data.sash_details.text | uppercase}}<br  *ngIf="data.sash_details.text_2!=''">{{data.sash_details.text_2 | uppercase}}</span>
+                                <ion-spinner [ngClass]="{'center':true}" *ngIf="!productListImage"></ion-spinner>
+                            </div>
+                            <ion-card-subtitle style="font-size: 16px; color: rgb(66, 60, 60);font-weight: normal;text-transform: none;">
+                                 <div  *ngIf="data.brand !=''">{{data.brand}}</div>
+                                 <div>{{data.display_name}}</div>
+                                 <div *ngIf="data.sku !=''">{{data.sku}}</div>
+                                 <div *ngIf="data.sale_price" style='text-decoration:line-through'>
+                                    {{option_settings.sale_price_full_prefix}} <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+data.price+''+option_settings_currency.postfix:data.price+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                                 </div>
+                                 <div *ngIf="data.sale_price" [style]="option_settings.sale_price_style">
+                                  <span>{{option_settings.sale_price_prefix}}{{(data.multi_price!=undefined && data.multi_price==true) ? option_settings.multi_price_prefix : ''}}</span>
+                                  <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+data.sale_price+''+option_settings_currency.postfix:data.sale_price+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                                </div>
+                                <div [style]="option_settings.price_style" *ngIf="!data.sale_price">
+                                  {{(data.multi_price!=undefined && data.multi_price==true) ? option_settings.multi_price_prefix : ''}}<span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+data.price+''+option_settings_currency.postfix:data.price+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                               </div>
+                            </ion-card-subtitle>
+                      </ion-card-header>
+                  </ion-card>
+              </ion-col>
+          </ion-row>
+    </ion-grid>
+    <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="recieved_data?.length > 0 && more_status==true">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    <ion-grid style="height: 50%;width: 100%;"  *ngIf="recieved_data?.length ==0">
+      <ion-row style="height: 100%;width: 100%;">
+        <ion-col style="text-align:center;height: 100%;width: 100%;display: flex !important;justify-content: center !important;align-items: center !important;">
+         <h6>Sorry, No Items!</h6>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+</ion-content>
+ <!-- Internnet Connection Check section-->
+ <app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>

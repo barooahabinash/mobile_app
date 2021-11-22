@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1060984184917-ti0bp2cprvjt1g1mv3b2qclpkur4497n.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1060984184917-ti0bp2cprvjt1g1mv3b2qclpkur4497n</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBejBMG79B3wnnUxN6D0arqykfy7NU_Hfs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1060984184917</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.visualsoft.vsdemo</string>
+	<key>PROJECT_ID</key>
+	<string>fir-visualsoft-co-uk-mobile</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fir-visualsoft-co-uk-mobile.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1060984184917:ios:f22b67d9406fb095d574dc</string>
+</dict>
+</plist>

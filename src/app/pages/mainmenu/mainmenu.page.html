@@ -1,0 +1,44 @@
+<ion-header>
+      <ion-toolbar>
+              <ion-title class="company_name_heading" *ngIf="!isBrandsClicked"><ion-img src="/assets/app_logo.svg" style="width: 50%;margin: auto;"></ion-img></ion-title>
+              <ion-title *ngIf="isBrandsClicked" style="text-align: center;">Brands</ion-title>
+              <ion-buttons slot="start">
+                    <ion-button  *ngIf="isBrandsClicked" (click)= "departmentsClicked()">
+                      <ion-icon name="arrow-back" style="zoom:1.3;"></ion-icon>
+                  </ion-button> 
+              </ion-buttons>
+      </ion-toolbar>
+</ion-header>
+<ion-content *ngIf="this.ApiConnectionService.onlineStatus && !isBrandsClicked && viewEntered" scrollEvents="true">
+    <ion-refresher slot="fixed" pullFactor="1" pullMin="100" pullMax="200" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+        pullingIcon="chevron-down-circle-outline"
+        pullingText="Pull to refresh"
+        refreshingSpinner="circles"
+        refreshingText="Refreshing...">
+        </ion-refresher-content>
+    </ion-refresher>
+    <ion-item-group *ngFor="let menu_data of menuDetails;" class="mainmenuborder">
+        <ion-item lines="none" (click) = "navigateFromMenu(menu_data)"><span style="padding-left: 0px;" [innerHTML]="menu_data.display_name"></span><span slot="end" style="padding-right: 0px;padding-top: 5px;"><ion-icon  src="/assets/icon/chevron_right.svg" slot="icon-only" no-margin></ion-icon></span></ion-item>
+    </ion-item-group>
+    <ion-item-group *ngIf="!isBrandsAvailable && availableBrands!=null" class="mainmenuborder">
+        <ion-item lines="none" (click) = "brandsclicked()"><span style="padding-left: 0px;">Brands</span><span slot="end" style="padding-right: 0px;padding-top: 5px;"><ion-icon  src="/assets/icon/chevron_right.svg" slot="icon-only" no-margin></ion-icon></span></ion-item>
+    </ion-item-group>
+</ion-content>
+<ion-content *ngIf="this.ApiConnectionService.onlineStatus && isBrandsClicked && viewEntered" scrollEvents="true">
+    <div *ngFor="let avBrands of availableBrands | keyvalue">
+        <ion-item-group *ngIf="avBrands.key !='#'">
+            <ion-item  class="mainmenuborder" lines="none">{{avBrands.key}}</ion-item>
+            <ion-item class="mainmenuborder"  lines="none" *ngFor="let group of avBrands.value" (click) = "navigateFromMenu(group)"><span style="padding-left: 10px;" [innerHTML]="group.display_name"></span><span slot="end" style="padding-right: 0px;padding-top: 5px;"><ion-icon  src="/assets/icon/chevron_right.svg" slot="icon-only" no-margin></ion-icon></span></ion-item>
+        </ion-item-group>
+    </div>
+    <div  *ngIf="(availableBrands['#'])" class="mainmenuborder">
+        <ion-item-group>
+            <ion-item class="mainmenuborder" lines="none">#</ion-item>
+            <ion-item class="mainmenuborder" lines="none" *ngFor="let group of availableBrands['#']" (click) = "navigateFromMenu(group)"><span style="padding-left: 0px;" [innerHTML]="group.display_name"></span><span slot="end" style="padding-right: 0px;padding-top: 5px;"><ion-icon  src="/assets/icon/chevron_right.svg" slot="icon-only" no-margin></ion-icon></span></ion-item>
+        </ion-item-group>
+    </div>
+</ion-content>
+ <!-- Internnet Connection Check section-->
+ <app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>
+

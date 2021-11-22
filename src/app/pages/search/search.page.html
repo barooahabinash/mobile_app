@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-searchbar placeholder="What are you looking for?" [(ngModel)]="searchValue" (search)="updateSearchResults(false,$event.target.value)" (ionCancel)="onCancel($event)" (ionClear)="onClear($event)"></ion-searchbar> 
+  </ion-toolbar>
+</ion-header>
+<ion-content *ngIf="this.ApiConnectionService.onlineStatus && viewEntered" [hidden]="scanActive">
+    <ion-grid *ngIf="barcode_scan_status"   style="width: 100%;border-bottom: 1px solid rgb(224, 216, 216);background-color: #fff;">
+          <ion-row (click)="startScanner();">
+              <ion-col size="2" style="text-align:center;">
+              <ion-icon name="barcode-outline" style="zoom:2.2;"></ion-icon>
+              </ion-col>
+              <ion-col size="8" style="text-align: left;;padding-top:3%;">
+              Scan an item's barcode
+              </ion-col>
+              <ion-col size="2" style="font-size: 30px;text-align:center;color:rgb(224, 216, 216)">
+              >
+              </ion-col>
+          </ion-row>
+    </ion-grid> 
+    <ion-grid style="width: 100%;">
+          <ion-row style="width: 100%;">
+            <ion-col style="text-align:center;font-weight: bold;font-size: x-large;">
+              <span>Search Results</span>
+            </ion-col>
+          </ion-row>
+    </ion-grid>
+    <!--
+    <div *ngIf="more_status===true" class="product_count_filter">
+          <div class="product_count" style="width:100%">{{more_status==true?append_item+'+':append_item}} Items</div>  
+    </div> 
+    -->
+    <ion-grid>
+        <ion-row>
+            <ion-col *ngFor="let data of recieved_data;" size="6" style="text-align: center;">
+                <ion-card class="card product_ion_card_col" no-margin   (click)="open(data)">
+                    <ion-card-header style="text-align: left;">
+                        <div [style]="'position: relative;display: inline-block;min-width:'+image_modified_details.width+'px;'+'min-height:'+image_modified_details.height+'px;'">
+                          <ion-img [src]="ApiConnectionService.client_url+data.image" [alt]="data.name"  (ionImgDidLoad)="searchListImage = true"></ion-img>
+                          <span *ngIf="((data.sash_location) && data.sash_location !='' && (data.sash_style) && data.sash_style !='')" [class]="'sash_position_'+data.sash_location" [style]="(data.sash_location == 't' || data.sash_location== 'b')? data.sash_style+'width:'+image_modified_details.width+'px;' :data.sash_style">{{data.sash_details.text | uppercase}}<br  *ngIf="data.sash_details.text_2!=''">{{data.sash_details.text_2 | uppercase}}</span>
+                          <ion-spinner [ngClass]="{'center':true}" *ngIf="!searchListImage"></ion-spinner> 
+                        </div> 
+                        <ion-card-subtitle style="font-size: 16px; color: rgb(66, 60, 60);font-weight: normal;text-transform: none;">
+                            <div  *ngIf="data.brand !=''">{{data.brand}}</div>
+                            <div>{{data.display_name}}</div>
+                            <div *ngIf="data.sku !=''">{{data.sku}}</div>
+                            <div *ngIf="data.sale_price" style='text-decoration:line-through'>
+                                {{option_settings.sale_price_full_prefix}} <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+data.price+''+option_settings_currency.postfix:data.price+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                            </div>
+                            <div *ngIf="data.sale_price" [style]="option_settings.sale_price_style">
+                                <span>{{option_settings.sale_price_prefix}}{{(data.multi_price!=undefined && data.multi_price==true) ? option_settings.multi_price_prefix : ''}}</span>
+                                <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+data.sale_price+''+option_settings_currency.postfix:data.sale_price+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                            </div>
+                           <div [style]="option_settings.price_style" *ngIf="!data.sale_price">
+                             {{(data.multi_price!=undefined && data.multi_price==true) ? option_settings.multi_price_prefix : ''}}<span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+data.price+''+option_settings_currency.postfix:data.price+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                          </div>
+                       </ion-card-subtitle>
+                    </ion-card-header>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-infinite-scroll  (ionInfinite)="doInfinite($event)" *ngIf="recieved_data?.length > 0 && more_status==true">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  
+    <ion-grid style="height: 50%;width: 100%;"  *ngIf="recieved_data?.length ==0">
+        <ion-row style="height: 100%;width: 100%;">
+          <ion-col style="text-align:center;height: 100%;width: 100%;display: flex !important;justify-content: center !important;align-items: center !important;">
+          <h6>No Items Match Your Search!</h6>
+          </ion-col>
+        </ion-row>
+    </ion-grid> 
+</ion-content>
+<div class="scan_box" *ngIf="this.ApiConnectionService.onlineStatus" [hidden]="!scanActive"></div>
+<div class="scanner_button" *ngIf="this.ApiConnectionService.onlineStatus" [hidden]="!scanActive">  <ion-button expand="block" fill="outline" color="secondary" (click)="stopScanner();" style="width: 50%;margin: auto;">Stop Scan</ion-button></div>
+ <!-- Internnet Connection Check section-->
+ <app-connection-check (retryReloadPageContent)="retry_page_content()" [hidden]="scanActive"></app-connection-check>

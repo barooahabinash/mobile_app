@@ -1,0 +1,265 @@
+  <!-- login section start-->
+  <form  #loginForm="ngForm" class="log_reg_form" [ngClass]="AuthenticationService.loginerrorflag? 'log_reg_form_submit'  : ''">
+    <ion-grid>
+                <ion-row>
+                    <ion-col size="6">
+                        <div class="ion-text-justify" *ngIf="AuthenticationService.existing_customer_flag == true">
+                                <h4>Existing Customer</h4>
+                        </div>
+                        <div class="ion-text-justify" *ngIf="AuthenticationService.existing_customer_flag == false">
+                            <h4>Forgot Password</h4>
+                        </div>
+                            <!-- <hr/> -->
+                    </ion-col>
+                    <ion-col size="6">
+                        <div *ngIf="AuthenticationService.existing_customer_flag == false" class="ion-text-end" style="padding: 19px 0;color: blue;" (click)="AuthenticationService.existingcustomer_forgotpassword(true);">
+                            Existing Customer?
+                           </div>
+                        <div  *ngIf="AuthenticationService.existing_customer_flag == true" class="ion-text-end" style="padding: 19px 0;color: blue;" (click)="AuthenticationService.existingcustomer_forgotpassword(false);">
+                        Forgot Password?
+                        </div>
+                        <!-- <hr/> -->
+                    </ion-col>
+                </ion-row>
+                <!-- Invalid login or invalid email for forgot password error msg section (validation in .ts side)-->
+                <ion-row *ngIf="(AuthenticationService.loginerrorflag) && (loginForm.valid)">
+                    <ion-col>
+                        <ion-text color="danger">
+                            <div style="width: 100%; text-align: center;"> {{AuthenticationService.login_forgot_password_errormsg}}</div>
+                        </ion-text>
+                    </ion-col>
+                </ion-row>
+                <!-- Username section-->
+                <ion-row>
+                    <ion-col>
+                        <ion-text class="log_reg_form_label">Email</ion-text>
+                        <ion-item lines="full">
+                            <ion-input name="uname" [(ngModel)]="username" id="uname" required #usernamecontrol="ngModel" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"></ion-input>
+                        </ion-item>
+                        <ion-text color="danger" *ngIf="usernamecontrol.invalid && ( AuthenticationService.loginerrorflag || usernamecontrol.dirty || usernamecontrol.touched)">
+                            <div *ngIf="usernamecontrol.errors.required">
+                                Email is required.
+                            </div>
+                            <div *ngIf="usernamecontrol.errors?.pattern">
+                                Please provide a valid email.
+                            </div>
+                        </ion-text>
+                    </ion-col>
+                </ion-row>
+                <!-- Password section-->
+                <ion-row *ngIf="AuthenticationService.existing_customer_flag == true">
+                    <ion-col>
+                        <ion-text class="log_reg_form_label">Password</ion-text>
+                        <ion-item lines="full">
+                            <ion-input type="password" name="upassword" [(ngModel)]="password" id="upassword" required #upasswordcontrol="ngModel" ></ion-input>
+                        </ion-item>
+                        <ion-text color="danger" *ngIf="upasswordcontrol.invalid && (AuthenticationService.loginerrorflag || upasswordcontrol.dirty || upasswordcontrol.touched)">
+                            <div *ngIf="upasswordcontrol.errors.required">
+                            Password is required.
+                            </div>
+                        </ion-text>
+                </ion-col>
+                </ion-row>
+                 <!-- Login submit or forgot password submit section-->
+                <ion-row>
+                    <ion-col>
+                        <div class="ion-text-end" *ngIf="AuthenticationService.existing_customer_flag == true" style="width: 50%;float: right;">
+                            <ion-button   size="large" float-right expand="block" color="tertiary"  (click)="loginForm.valid ?login() : AuthenticationService.loginerrorflag=true;">Login</ion-button>
+                        </div>
+                        <div class="ion-text-end" *ngIf="AuthenticationService.existing_customer_flag == false" style="float: right;">
+                            <ion-button size="large" float-right expand="block" color="tertiary" (click)="loginForm.valid ?AuthenticationService.send_password_email(usernamecontrol.value) : AuthenticationService.loginerrorflag=true;">Send Password Email</ion-button>
+                        </div>
+                    </ion-col>
+                </ion-row>         
+    </ion-grid>
+  </form>
+<!-- login section end-->  
+
+<!-- registration section start-->  
+  <form  #registrationForm="ngForm" class="log_reg_form" [ngClass]="RegistrationService.registrationerrorflag? 'log_reg_form_submit'  : ''">
+    <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <div class="ion-text-justify">
+                    <h4>New Customer</h4>
+                    </div>
+                </ion-col>
+            </ion-row>
+       <!-- Registration error msg section (validation in .ts side)-->
+            <ion-row *ngIf="(RegistrationService.registrationerrorflag) && (registrationForm.valid)">
+                <ion-col>
+                    <ion-text color="danger">
+                        <div style="width: 100%; text-align: center;"> {{RegistrationService.registrationerrormsg}}</div>
+                    </ion-text>
+                </ion-col>
+            </ion-row>
+     
+      <!-- Full Name section-->  
+      <ion-row>
+        <ion-col>
+                    <ion-text class="log_reg_form_label">Full Name</ion-text>
+                    <ion-item lines="full">
+                        <ion-input name="rfullname" [(ngModel)]="fullName" #fullNamecontrol="ngModel"  required minlength="4" id="rfullname"></ion-input>
+                    </ion-item>
+                    <ion-text color="danger" *ngIf="(fullNamecontrol.invalid && (RegistrationService.registrationerrorflag || fullNamecontrol.dirty || fullNamecontrol.touched))">
+                        <div *ngIf="fullNamecontrol.errors.required">
+                        Full Name is required.
+                        </div>
+                        <div *ngIf="fullNamecontrol.errors.minlength">
+                        Full Name must be at least 4 characters long.
+                        </div>
+                    </ion-text>
+        </ion-col>
+      </ion-row>
+      <!-- Email section-->  
+      <ion-row>
+        <ion-col>
+                <ion-text class="log_reg_form_label">Email</ion-text>
+                <ion-item lines="full">
+                    <ion-input  type="email" name="remail" [(ngModel)]="email" id="remail" #emailcontrol="ngModel"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required></ion-input>
+                </ion-item>
+                <ion-text color="danger" *ngIf="emailcontrol.invalid && (RegistrationService.registrationerrorflag || emailcontrol.dirty || emailcontrol.touched)">
+                    <div *ngIf="emailcontrol.errors.required">
+                    Email Address is required.
+                    </div>
+                    <div *ngIf="emailcontrol.errors.pattern">
+                    Please provide a valid email.
+                    </div>
+                </ion-text>
+        </ion-col>
+      </ion-row>
+       <!-- Password section-->  
+       <ion-row>
+            <ion-col>
+                    <ion-text class="log_reg_form_label">Password</ion-text>
+                    <ion-item lines="full">
+                        <ion-input type="password" name="rpassword"  [(ngModel)]="registerPassword" #registerPasswordcontrol="ngModel" id="rpassword" required minlength="5"></ion-input>
+                    </ion-item>
+                    <ion-text color="danger" *ngIf="registerPasswordcontrol.invalid && (RegistrationService.registrationerrorflag || registerPasswordcontrol.dirty || registerPasswordcontrol.touched)">
+                        <div *ngIf="registerPasswordcontrol.errors.required">
+                        Password is required.
+                        </div>
+                        <div *ngIf="registerPasswordcontrol.errors.minlength">
+                        Password should be at least 5 characters long.
+                        </div>
+                    </ion-text>
+           </ion-col>
+       </ion-row>
+       <!-- Phone Number section-->  
+       <ion-row>
+           <ion-col>
+                    <ion-text class="log_reg_form_label">Phone Number</ion-text>
+                    <ion-item lines="full">
+                        <ion-input type="number" name="rphoneno" [(ngModel)]="phoneNumber" id="rphoneno" #phoneNumbercontrol="ngModel"  pattern="^((\\+44-?)|0)?[0-9]{10}$" required></ion-input>
+                    </ion-item>
+                    <ion-text color="danger" *ngIf="phoneNumbercontrol.invalid && (RegistrationService.registrationerrorflag || phoneNumbercontrol.dirty || phoneNumbercontrol.touched)">
+                        <div *ngIf="phoneNumbercontrol.errors.required">
+                        Phone Number is required.
+                        </div>
+                        <div *ngIf="phoneNumbercontrol.errors.pattern">
+                        Phone Number is not valid.
+                        </div>
+                    </ion-text>
+           </ion-col>
+      </ion-row>
+       <!-- House Number/Name section-->  
+       <ion-row *ngIf = "!address_lookup_status">
+            <ion-col>
+                    <ion-text class="log_reg_form_label">House Number/Name</ion-text>
+                    <ion-item lines="full">
+                        <ion-input name="rhouseno" [(ngModel)]="houseNumber" #houseNumbercontrol="ngModel" id="rhouseno" required></ion-input>
+                    </ion-item>
+                    <ion-text color="danger" *ngIf="houseNumbercontrol.invalid && (RegistrationService.registrationerrorflag || houseNumbercontrol.dirty || houseNumbercontrol.touched)">
+                        <div *ngIf="houseNumbercontrol.errors.required">
+                        House Number/Name is required.
+                        </div>
+                    </ion-text>
+            </ion-col>
+       </ion-row>
+       <!-- Address Line 1 section-->
+       <ion-row *ngIf = "!address_lookup_status">
+             <ion-col>
+                        <ion-text class="log_reg_form_label">Address Line 1</ion-text>
+                        <ion-item lines="full">
+                            <ion-input name="raddressline1" [(ngModel)]="addressLine1" #addressLinecontrol="ngModel" id="raddressline1" required></ion-input>
+                        </ion-item>
+                        <ion-text color="danger" *ngIf="addressLinecontrol.invalid && (RegistrationService.registrationerrorflag || addressLinecontrol.dirty || addressLinecontrol.touched)">
+                            <div *ngIf="addressLinecontrol.errors.required">
+                            Address Line 1 is required.
+                            </div>
+                        </ion-text>
+            </ion-col>
+        </ion-row>
+      <!-- Address Line 2 section-->
+      <ion-row *ngIf = "!address_lookup_status">
+           <ion-col>
+                <ion-text class="log_reg_form_label">Address Line 2</ion-text>
+                <ion-item lines="full">
+                    <ion-input name="raddressline2" [(ngModel)]="addressLine2" id="raddressline2"></ion-input>
+                </ion-item>
+            </ion-col>
+      </ion-row>
+      <!-- Town section-->
+      <ion-row *ngIf = "!address_lookup_status">
+                <ion-col>
+                        <ion-text class="log_reg_form_label">Town</ion-text>
+                        <ion-item lines="full">
+                            <ion-input name="rtown" [(ngModel)]="town" #towncontrol="ngModel" id="rtown" required></ion-input>
+                        </ion-item>
+                        <ion-text color="danger" *ngIf="towncontrol.invalid && (RegistrationService.registrationerrorflag || towncontrol.dirty || towncontrol.touched)">
+                            <div *ngIf="towncontrol.errors.required">
+                            Town is required.
+                            </div>
+                        </ion-text>
+            </ion-col>
+      </ion-row>
+      <!-- <ion-item>
+      <ion-input placeholder="City"></ion-input>
+      </ion-item> -->
+      <!-- County section-->
+      <ion-row *ngIf = "!address_lookup_status">
+            <ion-col>
+                        <ion-text class="log_reg_form_label">County</ion-text>
+                        <ion-item lines="full">
+                            <ion-input name="rcounty" [(ngModel)]="county"  #countycontrol="ngModel" id="rcounty" required></ion-input>
+                        </ion-item>
+                        <ion-text color="danger" *ngIf="countycontrol.invalid && (RegistrationService.registrationerrorflag || countycontrol.dirty || countycontrol.touched)">
+                            <div *ngIf="countycontrol.errors.required">
+                            County is required.
+                            </div>
+                        </ion-text>
+            </ion-col>
+      </ion-row>
+       <!-- Postecode section-->
+       <ion-row [ngClass]="postcodeerrorflag? 'postcode_button_submit'  : ''">
+            <ion-col>
+                <ion-text class="log_reg_form_label">Postcode</ion-text>
+                <ion-item lines="full">
+                    <ion-input  name="rpostcode" [(ngModel)]="postcode" #postcodecontrol="ngModel" id="rpostcode" minlength="3" required ></ion-input>
+                </ion-item>
+                <ion-text color="danger" *ngIf="postcodecontrol.invalid && (RegistrationService.registrationerrorflag || postcodeerrorflag || postcodecontrol.dirty || postcodecontrol.touched)">
+                    <div *ngIf="postcodecontrol.errors.required">
+                    Postcode is required.
+                    </div>
+                    <div *ngIf="postcodecontrol.errors.minlength">
+                    Postcode must be at least 3 characters long.
+                    </div>
+                </ion-text>
+           </ion-col>
+           <ion-col *ngIf = "address_lookup_status">
+                <div class="ion-text-end" style="height: 100%;">
+                    <ion-button class="post_code_button" color="tertiary" fill="outline" float-right (click)="postcodecontrol.valid?find_postcode_id():postcodeerrorflag=true;">Find Address</ion-button>
+                </div>
+           </ion-col>    
+      </ion-row>
+       <!-- submit section-->
+       <ion-row *ngIf = "!address_lookup_status">
+            <ion-col>
+                <div class="ion-text-end">
+                    <ion-button  size="large" float-right expand="block" color="tertiary"  (click)="registrationForm.valid?register():RegistrationService.registrationerrorflag=true;" style="width: 50%;float: right;">Register</ion-button>
+                </div>
+           </ion-col>
+       </ion-row>
+    </ion-grid>
+</form>
+<!-- registration section end-->  

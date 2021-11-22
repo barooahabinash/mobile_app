@@ -1,0 +1,24 @@
+<ion-header>
+        <ion-toolbar>
+             <ion-title style="text-align: center;">More</ion-title>
+        </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="(this.ApiConnectionService.onlineStatus)">
+        <ion-refresher slot="fixed" pullFactor="1" pullMin="100" pullMax="200" (ionRefresh)="doRefresh($event)">
+            <ion-refresher-content
+            pullingIcon="chevron-down-circle-outline"
+            pullingText="Pull to refresh"
+            refreshingSpinner="circles"
+            refreshingText="Refreshing...">
+            </ion-refresher-content>
+        </ion-refresher>
+        <ion-list *ngIf="AuthenticationService.userHasLogged" class="moreborder">
+            <ion-item (click) = "logout()" lines="none" style="color: blue;"><ion-icon name="log-out-outline"  style="zoom:1.3;margin-right: 5px;"></ion-icon>Log Out</ion-item>
+        </ion-list>
+        <ion-list *ngFor="let data of pages;" class="moreborder">
+             <ion-item (click) = "navigateFromList(data)" lines="none">{{data.display_name}}</ion-item>
+        </ion-list>
+</ion-content>
+ <!-- Internnet Connection Check section-->
+ <app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>

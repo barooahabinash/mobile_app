@@ -1,0 +1,320 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title style>Checkout</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="!AuthenticationService.userHasLogged && (this.ApiConnectionService.onlineStatus)">
+    <app-login-registration></app-login-registration>
+</ion-content>
+
+
+<ion-content *ngIf="(AuthenticationService.userHasLogged) &&  (viewEntered == true) && (this.ApiConnectionService.onlineStatus)">
+
+    <ion-grid  *ngIf="failedproductArray?.length > 0" class="outofstockproducts">
+        <ion-row>
+            <ion-col>
+               <b>Out of Stock</b>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let failedproductitem of failedproductArray;">
+            <ion-col>
+                <div [innerHTML] ="failedproductitem"></div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid  *ngIf="alteredqtyproductArray?.length > 0" class="alteredproducts">
+        <ion-row>
+            <ion-col>
+            <b>Quantity Changes</b>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let altered_qtyproductitem of alteredqtyproductArray;">
+            <ion-col>
+            <div [innerHTML] ="altered_qtyproductitem.title"></div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid  *ngIf="alteredpriceproductArray?.length > 0" class="alteredproducts">
+        <ion-row>
+            <ion-col>
+                <b>Price Changes</b>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let altered_priceroductitem of alteredpriceproductArray;">
+            <ion-col>
+            <div [innerHTML] ="altered_priceroductitem.title"></div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid  *ngIf="alteredqtypriceproductArray?.length > 0" class="alteredproducts">
+        <ion-row>
+            <ion-col>
+            <b>Quantity and Price Changes</b>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let altered_qtypriceroductitem of alteredqtypriceproductArray;">
+            <ion-col>
+            <div [innerHTML] ="altered_qtypriceroductitem.title"></div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <ion-item>
+                    <ion-text text-left no-padding>
+                    <h4>Item Summary</h4>
+                    </ion-text>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let item of itemsArray;" size="6" class="checkoutpagepadding">
+            <ion-col>
+                <ion-row>
+
+                    <ion-col *ngIf="item.title.length >= 32" class="horizontal-scroll-column" style="max-width: 260px;">
+                        <ion-text text-left no-padding class="to-animate checkout-animation">
+                            {{item.quantity}} x {{item.title}}
+                            </ion-text>
+                    </ion-col>
+                    <ion-col *ngIf="item.title.length < 32" class="horizontal-scroll-column" style="max-width: 260px;">
+                        <ion-text text-left no-padding >
+                            {{item.quantity}} x {{item.title}}
+                            </ion-text>
+                    </ion-col>
+<!--
+                    <ion-col>
+                        <ion-text text-left no-padding>
+                        {{item.quantity}} x {{item.title}}
+                        </ion-text>
+                    </ion-col>
+                -->
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-text text-left no-padding>
+                        {{item.summary}}
+                        </ion-text>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+            <ion-col>
+                <div class="ion-text-right" [style]="option_settings.price_style">
+                    <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+item.product_price+''+option_settings_currency.postfix:item.product_price +''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                 </div>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-item>
+                    <ion-text text-left no-padding>
+                    <h4>Delivery Address</h4>
+                    </ion-text>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-list class="checkoutpagepadding">
+        <!-- <ion-row *ngFor="let address of addressesArray" class="listborder">
+        <ion-col> -->
+        <ion-radio-group  value="{{selected_address}}"  (ionChange)="radioGroupChange()" #radioGroup>
+            <ion-item *ngFor="let address of addressesArray" (click)="radioFocus(address.id)" class="txtaligntop listborder" lines="none">
+                <ion-radio slot="start"  value="{{address.id}}"  color="tertiary">
+                </ion-radio>
+                <ion-label>{{address.name}}<br>{{address.address_1}}<br *ngIf="address.address_2!=''"> {{address.address_2}}<br>{{address.town}}<br>{{address.postcode}},{{address.iso_3116}}</ion-label>
+                </ion-item>
+        </ion-radio-group>
+        <!-- </ion-col>
+        </ion-row> -->
+        <ion-grid class="listborder">
+            <ion-row>
+                <ion-col>
+                    <ion-item (click)="addAddress()" lines="none">
+                        <ion-label>Add New Address</ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-list>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                    <ion-item>
+                        <ion-text text-left no-padding>
+                          <h4>Shipping Method</h4>
+                        </ion-text>
+                  </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid class="checkoutpagepadding" *ngIf="couriersArray?.length == 0 && viewEntered == true">
+        <ion-row class="listborder">
+              <ion-col style="text-align: center;">
+                  
+                  <ion-text no-padding style="color: red;">
+                    No shipping available for this product.
+                  </ion-text>
+                    
+              </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-list *ngIf="couriersArray?.length > 0" class="checkoutpagepadding">
+    
+        <!-- <ion-row *ngFor="let courier of couriersArray" class="listborder">
+        <ion-col> -->
+            <ion-radio-group  name="radio-group" value="{{selected_courier}}"  (ionChange)="radioGroupChangeCourier()" #radioGroup>
+                <ion-item *ngFor="let courier of couriersArray" (click)="radioFocusCourier(courier.id)" lines="none" class="listborder">
+                    <ion-radio slot="start" value="{{courier.id}}"  color="tertiary">
+                    <!-- value can be send from radioFocus method as well if required, now sent from radioGroupChange -->
+                    </ion-radio>
+
+                    <ion-label>{{courier.name}}<br>
+                        <span   *ngIf="courier.price > 0" [style]="option_settings.price_style" [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+courier.price+''+option_settings_currency.postfix:courier.price +''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                        <span *ngIf="courier.price == 0 || courier.price==''" [style]="option_settings.price_style">FREE</span></ion-label>
+                   
+                </ion-item>
+            </ion-radio-group>
+        <!-- </ion-col>
+        </ion-row> -->
+
+    </ion-list>
+    <ion-grid  *ngIf="delivery_day_array !='' && delivery_day_array != null">
+        <ion-row>
+            <ion-col>
+                <ion-button expand="block" (click)="openDeliveryDatePicker()" style="font-size: smaller;">{{delivery_date_day_title}}</ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <ion-item>
+                    <ion-text text-left no-padding>
+                        <h4>Discount</h4>
+                    </ion-text>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngIf="discountapplyerrormsg!=''">
+            <ion-col style="text-align: center;">
+                
+                <ion-text no-padding style="color: red;">
+                  {{discountapplyerrormsg}}
+                </ion-text>
+                  
+            </ion-col>
+        </ion-row>
+        <ion-row *ngIf="discountCodesArray.length > 0">
+            <ion-col style="text-align: center;">
+                
+                <ion-grid style="padding-left: 20px;">
+                    <ion-row *ngFor="let discountcode_list of discountCodesArray;let code_key=index;"  class="listborder">
+                        <ion-col size="10" style="text-align: left;font-size: small;">
+                            {{discountcode_list.name}}
+                        </ion-col>
+                        <ion-col size="2" style="text-align:end;font-size: small;">
+                            <span (click)="removeDiscount(code_key)">X</span>
+                        </ion-col>
+                    </ion-row>
+           
+                </ion-grid>
+                  
+            </ion-col>
+        </ion-row>
+        
+        <ion-row class="checkoutpagepadding">
+            <ion-col class="discount_code_field">
+                <ion-text class="discount_code_label">Discount Code</ion-text>
+                <ion-item lines="full">
+                   <ion-input [(ngModel)]="discountCode" id="discountcodeval"></ion-input>
+                </ion-item>
+            </ion-col>
+            <ion-col>
+                <div class="ion-text-justify" style="height: 100%;">
+                   <ion-button  class="discount_code_button" color="tertiary" fill="outline" float-right  (click)="applyDiscount()">Apply</ion-button>
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <ion-item>
+                    <ion-text text-left no-padding>
+                        <h4>Order Summary</h4>
+                    </ion-text>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid class="checkoutpagepadding">
+        <ion-row >
+            <ion-col size="4" style="text-align: left;">{{totalItems > 9 ? totalItems:'0'+totalItems}} items:</ion-col>
+            <ion-col size="8">
+            <div class="ion-text-right" [style]="option_settings.price_style">
+             <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+subTotal+''+option_settings_currency.postfix:subTotal +''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+            </div>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="4" style="text-align: left;">Shipping:</ion-col>
+            <ion-col size="8">
+                <div class="ion-text-right" [style]="option_settings.price_style">
+                <span  *ngIf="courier_price > 0" [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+courier_price+''+option_settings_currency.postfix:courier_price +''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                <span *ngIf="courier_price == 0 || courier_price==''">FREE</span>
+                </div>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngIf="discount_total > 0 ">
+            <ion-col size="4" style="text-align: left;">Discount:</ion-col>
+            <ion-col size="8">
+            <div class="ion-text-right" [style]="option_settings.price_style">
+            -<span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+discount_total+''+option_settings_currency.postfix:discount_total +''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+           
+            </div>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="4" style="text-align: left;">
+                <h5>Total:</h5>
+            </ion-col>
+            <ion-col size="8">
+                <div class="ion-text-right">
+                <h5><span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+total_amount+''+option_settings_currency.postfix:total_amount +''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                </h5>
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid class="flashmsg" *ngIf="flash_message!=''">
+        <ion-row>
+            <ion-col style="text-align: center;">
+
+            <ion-text no-padding>
+            {{flash_message}}
+            </ion-text>
+
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-grid class="checkoutpagepadding" style="text-align: center;">
+        <ion-row>
+            <ion-col>
+                <ion-button expand="block" size="large" color="tertiary" (click)="createPayment()" [disabled]="(couriersArray?.length > 0 && itemsArray?.length >0)?'false':'true'">Continue to Secure Payment</ion-button>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                    <ion-label (click)="showTerms()" style="font-size: small;">By continuing to pay,you agree to our <span style="text-decoration: underline;">Terms & Conditions</span></ion-label>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
+ <!-- Internnet Connection Check section-->
+ <app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>

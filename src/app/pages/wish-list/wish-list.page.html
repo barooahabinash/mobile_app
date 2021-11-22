@@ -1,0 +1,113 @@
+<ion-app>
+    <ion-menu side="end" menuId="wishlist" contentId="newMain" class="my-custom-menu" width = "600">
+        <ion-content>
+            <app-cart></app-cart>
+        </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="newMain"></ion-router-outlet>
+
+    <ion-header>
+        <ion-toolbar>
+            <!--ion-buttons slot="start">
+                <ion-menu-button id="menuWishlist-button" (click) = "openMenu()"></ion-menu-button>
+            </ion-buttons-->  
+            <ion-buttons slot="end">
+                <ion-button id="notification-button" (click) = "openCustom()">
+                    <ion-icon src="/assets/icon/bag.svg" slot="icon-only" no-margin class="white top-btn"></ion-icon>
+                    <ion-badge id="notifications-badge" color="danger">{{CartService.cartCount}}</ion-badge>
+                </ion-button>  
+            </ion-buttons>  
+            <ion-title style="text-align:center" size="medium">
+                 Wish List
+            </ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ion-content *ngIf="!AuthenticationService.userHasLogged && this.ApiConnectionService.onlineStatus">
+        <ion-refresher slot="fixed" pullFactor="1" pullMin="100" pullMax="200" (ionRefresh)="doRefresh($event)">
+            <ion-refresher-content
+            pullingIcon="chevron-down-circle-outline"
+            pullingText="Pull to refresh"
+            refreshingSpinner="circles"
+            refreshingText="Refreshing...">
+            </ion-refresher-content>
+        </ion-refresher>
+      <!-- <app-login></app-login> -->
+       <app-login-registration></app-login-registration>
+    </ion-content>
+
+    <ion-content *ngIf="this.ApiConnectionService.onlineStatus && viewEntered && (AuthenticationService.userHasLogged || recieved_data?.length !== 0)">
+        <ion-refresher slot="fixed" pullFactor="1" pullMin="100" pullMax="200" (ionRefresh)="doRefresh($event)">
+            <ion-refresher-content
+            pullingIcon="chevron-down-circle-outline"
+            pullingText="Pull to refresh"
+            refreshingSpinner="circles"
+            refreshingText="Refreshing...">
+            </ion-refresher-content>
+        </ion-refresher>
+        <ion-grid *ngFor="let data of recieved_data;let j=index" size="6" class="whishlistborder">
+            <ion-row >
+                <!--ion-col size="2">
+                            <ion-img [src]="ApiConnectionService.client_url+data.image" [alt]="data.title" (ionImgDidLoad)="wishlistImage = true" (click)="open(data)" style="width:80%"></ion-img>
+                            <ion-spinner [ngClass]="{'center':true}" *ngIf="!wishlistImage"></ion-spinner>
+                </ion-col-->
+                <ion-col size="2" style="z-index: 9999;">
+                    <ion-thumbnail (click)="open(data)">
+                         <ion-img [src]="ApiConnectionService.client_url+data.image" [alt]="data.title"  (ionImgDidLoad)="wishlistImage = true" style="height: auto;width: auto;"></ion-img>
+                        <ion-spinner [ngClass]="{'center':true}" *ngIf="!wishlistImage"></ion-spinner>
+                    </ion-thumbnail>
+                </ion-col>
+
+                <ion-col *ngIf="data.title.length >= 32" class="horizontal-scroll-column" size="8">
+                    <span style="font-weight: bold;" class="to-animate wishlist-animation"><b>{{data.title}}</b></span>
+                    <span style="font-size: smaller;display: block;">{{data.summary}}</span>
+                </ion-col>
+                <ion-col *ngIf="data.title.length < 32" size="8">
+                    <span style="font-weight: bold;" class="to-animate wishlist-animation"><b>{{data.title}}</b></span>
+                    <span style="font-size: smaller;display: block;">{{data.summary}}</span>
+                </ion-col>
+              
+                <ion-col size="2">
+                    <ion-icon name="trash-outline" style="zoom: 1.3;" (click) = "deleteItem(data)"></ion-icon>
+                </ion-col>
+            </ion-row>
+            <ion-row class="bottomRow">
+                <ion-col size="2">
+                </ion-col>
+                <ion-col size="10">
+                        <div style="font-weight: bold;">Quantity</div>
+                        <ion-grid style="width: 100%;height: 100%;">
+                            <ion-row>
+                                <ion-col size="2" class="addremovebuttonborder" (click) = "removeSelected(data)" value="Remove">-</ion-col>
+                                <ion-col size="2" class="addremovebuttonborder">{{data.quantity}}</ion-col>
+                                <ion-col size="2" class="addremovebuttonborder" (click) = "addSelected(data)" value="Add">+</ion-col>
+                                <ion-col size="5" style="text-align: end;font-weight: bold;">
+                                    <span *ngIf="data.price_breaks[price_break_corrct_index[j]].sale_price" style="display: block;" [innerHTML]="options_settings.currency.position=='before'?options_settings.currency.symbol+''+((data.price_breaks[price_break_corrct_index[j]].sale_price *  data.quantity)| number:'1.2-2')+''+options_settings.currency.postfix:((data.price_breaks[price_break_corrct_index[j]].sale_price * data.quantity)| number:'1.2-2')+''+options_settings.currency.symbol+''+options_settings.currency.postfix"></span>
+                                    <span *ngIf="!data.price_breaks[price_break_corrct_index[j]].sale_price" style="display: block;" [innerHTML]="options_settings.currency.position=='before'?options_settings.currency.symbol+''+((data.price_breaks[price_break_corrct_index[j]].price *  data.quantity)| number:'1.2-2')+''+options_settings.currency.postfix:((data.price_breaks[price_break_corrct_index[j]].price * data.quantity)| number:'1.2-2')+''+options_settings.currency.symbol+''+options_settings.currency.postfix"></span>  
+                         
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                </ion-col>
+               
+            </ion-row>    
+        </ion-grid>
+    </ion-content>
+    <ion-content *ngIf="(AuthenticationService.userHasLogged && (this.ApiConnectionService.onlineStatus && viewEntered) && (recieved_data === null || recieved_data?.length ===0 ))">
+        <ion-refresher slot="fixed" pullFactor="1" pullMin="100" pullMax="200" (ionRefresh)="doRefresh($event)">
+            <ion-refresher-content
+            pullingIcon="chevron-down-circle-outline"
+            pullingText="Pull to refresh"
+            refreshingSpinner="circles"
+            refreshingText="Refreshing...">
+            </ion-refresher-content>
+        </ion-refresher>
+        <ion-text text-center no-padding style="text-align:center;">
+            <h6>No items in wishlist!</h6>
+        </ion-text>
+    </ion-content>
+     <!-- Internnet Connection Check section-->
+     <app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>
+</ion-app>
+
+

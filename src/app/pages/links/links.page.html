@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title style="text-align:center">{{dataService.morePageLinkDisplayName}}</ion-title>
+    <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf = "(!(isAccount || isApp_info) && (this.ApiConnectionService.onlineStatus))">
+    <ion-grid>
+            <ion-row>
+                <ion-col>
+                        <div [innerHTML] = "pageHtml | safeHtml"  class="ion-text-justify">
+                        </div> 
+                </ion-col>
+        </ion-row>
+</ion-grid>
+</ion-content>
+<ion-content *ngIf = "(isAccount && AuthenticationService.userHasLogged && this.ApiConnectionService.onlineStatus)">
+    <ion-list class="moreborder">
+        <ion-item lines="none" (click)="order_history();">Order History</ion-item>
+     </ion-list>
+     <ion-list class="moreborder">
+        <ion-item lines="none" (click)="address_book();">Address Book</ion-item>
+     </ion-list>
+     <ion-list class="moreborder">
+       
+        <ion-item lines="none"><p class="ion-text-center full-width">{{AuthenticationService.loggeduserEmail}}</p><ion-button size="small" (click)="logout()" slot="end">Logout</ion-button></ion-item>
+     </ion-list>
+    </ion-content>
+    <!--ion-content *ngIf = "(isAccount && AuthenticationService.userHasLogged && this.ApiConnectionService.onlineStatus)">
+        <p class="ion-text-center full-width">{{AuthenticationService.loggeduserEmail}}</p>
+        <div class="ion-text-center">
+         <ion-button size="small" (click)="logout()">Logout</ion-button>
+        </div>
+     </ion-content-->
+<ion-content *ngIf = "(isAccount && !AuthenticationService.userHasLogged && this.ApiConnectionService.onlineStatus)">
+        <app-login-registration></app-login-registration>
+</ion-content>
+
+<ion-content *ngIf = "(isApp_info && this.ApiConnectionService.onlineStatus)">
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                    <div class="ion-text-justify" style="line-height:24px">
+                        Version 1.6.0<br />
+                        App by <a href="http://www.visualsoft.co.uk?utm_source=ios_app">Visualsoft</a><br /><br />
+                        
+                    </div>
+                    <div class="ion-text-center" style="line-height:24px">
+                        <ion-button size="small" (click)="openSettings()" style="width: 70%;">Manage Settings</ion-button>
+                    </div>
+                </ion-col>
+            </ion-row>
+    </ion-grid>
+</ion-content>
+<!--ion-footer *ngIf = "(isAccount && AuthenticationService.userHasLogged && this.ApiConnectionService.onlineStatus)">
+    <ion-toolbar>
+        <ion-list class="moreborder">
+       
+            <ion-item lines="none"><p class="ion-text-center full-width">{{AuthenticationService.loggeduserEmail}}</p><ion-button size="small" (click)="logout()" slot="end">Logout</ion-button></ion-item>
+         </ion-list>
+      </ion-toolbar>
+  </ion-footer-->
+ <!-- Internnet Connection Check section-->
+ <app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>

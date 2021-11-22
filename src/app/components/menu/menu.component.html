@@ -1,0 +1,34 @@
+<ion-app>
+    <ion-header>
+        <ion-toolbar color="primary">
+            <ion-buttons slot="start" *ngIf="menuDetails.length > 0">
+                <ion-button id="department-button" (click) = "departmentsClicked()"> Departments
+                </ion-button>
+            </ion-buttons>    
+            <ion-buttons slot="end" *ngIf="!isBrandsAvailable && availableBrands!=null">
+                <ion-button id="brand-button" (click) = "brandsclicked()"> Brands
+                </ion-button>  
+            </ion-buttons>    
+        <!-- <ion-title>Start Menu</ion-title> -->
+        </ion-toolbar>
+    </ion-header>
+    <ion-content *ngIf="!isBrandsClicked">
+        <ion-item-group *ngFor="let data of menuDetails;">
+            <ion-item (click) = "navigateFromMenu(data)"><span style="padding-left: 20px;" [innerHTML]="data.display_name"></span></ion-item>
+        </ion-item-group>
+    </ion-content>
+    <ion-content *ngIf="isBrandsClicked" scrollEvents="true">
+          <div *ngFor="let avBrands of availableBrands | keyvalue">
+                <ion-item-group *ngIf="avBrands.key !='#'">
+                  <ion-item>{{avBrands.key}}</ion-item>
+                  <ion-item  *ngFor="let group of avBrands.value" (click) = "navigateFromMenu(group)"><span style="padding-left: 20px;" [innerHTML]="group.display_name"></span></ion-item>
+                </ion-item-group>
+          </div>
+          <div  *ngIf="(availableBrands['#'])">
+              <ion-item-group>
+                <ion-item>#</ion-item>
+                <ion-item *ngFor="let group of availableBrands['#']" (click) = "navigateFromMenu(group)"><span style="padding-left: 20px;" [innerHTML]="group.display_name"></span></ion-item>
+              </ion-item-group>
+          </div>
+    </ion-content>
+</ion-app>

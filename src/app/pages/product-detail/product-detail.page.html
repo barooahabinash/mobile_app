@@ -1,0 +1,174 @@
+<ion-menu side="end" [menuId]="'product-detail'+prod_det_menu_dymic_no"  contentId="main" class="my-custom-menu">
+    <ion-content>
+      <app-cart></app-cart>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id="main"></ion-router-outlet>
+  <ion-header>
+        <ion-toolbar>
+                <ion-title style="text-align:center" *ngIf="!AuthenticationService.userHasLogged">Wish List</ion-title>
+                <ion-buttons slot="start">
+                  <ion-back-button *ngIf="AuthenticationService.userHasLogged"></ion-back-button>
+
+                  <div *ngIf='!AuthenticationService.userHasLogged' (click)='showproduct_details()'>
+                    <ion-back-button  disabled></ion-back-button>
+                  </div>
+                
+                </ion-buttons>
+                <ion-searchbar  *ngIf="AuthenticationService.userHasLogged" placeholder="What are you looking for?" (search)="toSearchPage()" [(ngModel)]="searchValue"></ion-searchbar>  
+                <ion-buttons slot="end">
+                  <ion-button id="notification-button" (click) = "openCustom()">
+                    <ion-icon src="/assets/icon/bag.svg" slot="icon-only" no-margin class="white top-btn"></ion-icon>
+                    <ion-badge id="notifications-badge" color="danger">{{CartService.cartCount}}</ion-badge>
+                  </ion-button> 
+                </ion-buttons>    
+        </ion-toolbar>
+  </ion-header>
+  <ion-content *ngIf="(!AuthenticationService.userHasLogged) && (viewEntered) && (this.ApiConnectionService.onlineStatus)">
+    <app-login-registration (addingtowishlist)="addToWishListSection()" ></app-login-registration>   
+  </ion-content>
+  
+  <ion-content *ngIf="(AuthenticationService.userHasLogged) && (viewEntered) && (this.ApiConnectionService.onlineStatus)">
+                <ion-slides pager [options]="slideOptsOne" zoom #adSlider  style="margin-top: 3px;" (ionSlideDoubleTap)="show_hide_sash()">
+                    <ion-slide *ngFor="let product_image of product_images">
+                    <div class = "swiper-zoom-container" style="position: relative;min-height:300px;">
+                        <img [src]="product_image" (load)="productImage = true">
+                        <span *ngIf="((isShown_sash) && (product_details.sash_location) && product_details.sash_location !='' && (product_details.sash_style) && product_details.sash_style !='')" [class]="'sash_position_'+product_details.sash_location" [style]="product_details.sash_style">{{product_details.sash_details.text | uppercase}} <br  *ngIf="product_details.sash_details.text_2!=''">{{product_details.sash_details.text_2 | uppercase}}</span>
+                        <ion-spinner [ngClass]="{'center':true}" *ngIf="!productImage" style="position: absolute;text-align: center;"></ion-spinner>
+                    </div>
+                    <!-- <div class="ion-text-bottom">
+                        <img src="assets/icon/zoom.png" style="align-self: flex-end;" tappable (click)="openPreview()">
+                    </div> -->
+                    </ion-slide>
+                </ion-slides>
+               
+                    <ion-grid style="margin-left: 10px;margin-right: 10px;">
+                        <ion-row>
+                            <ion-col style="text-align: left;font-size:17px;" size="10">
+                                <div [innerHTML]="product_details.title" style="margin-bottom: 5px;">
+                                </div>
+                                <div>
+                                    {{product_details.brand}}
+                                    </div>
+                            </ion-col>
+                            <ion-col size="2" style="text-align: end;">
+                                <ion-icon name="share-outline" size="large" (click)="share()"></ion-icon>
+                                <div style="font-size:small;">Share</div>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row *ngIf="salePrice && 2 > price_breaks_count" style="text-align: left;font-weight: bolder;font-size: 20px;">
+                            <ion-col>
+                                 <div style='text-decoration:line-through'>
+                                  {{option_settings.sale_price_full_prefix}} <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+actualPrice+''+option_settings_currency.postfix:actualPrice+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                                      </div>
+                                    
+                             </ion-col>
+                             <ion-col style="text-align:end;">
+                                <div [style]="option_settings.sale_price_style">
+                                  <span>{{option_settings.sale_price_prefix}}</span>
+                                  <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+salePrice+''+option_settings_currency.postfix:salePrice+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                                  </div>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row *ngIf="!salePrice && 2 > price_breaks_count" style="text-align: left;font-weight: bolder;font-size: 20px;">
+                            <ion-col>
+                              
+                                <div [style]="option_settings.price_style">
+                                  <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+actualPrice+''+option_settings_currency.postfix:actualPrice+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                                </div>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row *ngIf="price_breaks_count > 1">
+                            <ion-col style="padding-left: 10%;padding-right: 10%;">
+                                <ion-grid class="product_break_detail_border">
+                                    <ion-row style="background-color: rgb(228, 227, 227);">
+                                        <ion-col *ngFor="let price_b_values of price_breaks_details | keyvalue: dataService.originalOrder"  style="border-left: 1px solid white;">
+                                            <b>{{price_b_values.key}}+</b>
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row >
+                                        <ion-col *ngFor="let price_b_values of price_breaks_details | keyvalue:  dataService.originalOrder">
+                                            <div class="ion-text-center" style='text-decoration:line-through' *ngIf="price_b_values.value.sale_price != undefined">
+                                                {{option_settings.sale_price_full_prefix}} <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+price_b_values.value.price+''+option_settings_currency.postfix:price_b_values.value.price+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                                            </div>
+                                            <div class="ion-text-center" [style]="option_settings.sale_price_style" *ngIf="price_b_values.value.sale_price != undefined">
+                                                <span>{{option_settings.sale_price_prefix}}</span>
+                                                <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+price_b_values.value.sale_price+''+option_settings_currency.postfix:price_b_values.value.sale_price+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                                            </div>
+                                            <div class="ion-text-center" [style]="option_settings.price_style" *ngIf="price_b_values.value.sale_price == undefined">
+                                                <span [innerHTML]="option_settings_currency.position=='before'?option_settings_currency.symbol+''+price_b_values.value.price+''+option_settings_currency.postfix:price_b_values.value.price+''+option_settings_currency.symbol+''+option_settings_currency.postfix"></span>
+                                              </div>
+                                           
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-grid>
+                              
+                            </ion-col>
+                        </ion-row>
+                        <ion-row *ngIf="colorswatchArray?.length > 0">
+                          <ion-col style="text-align: center;font-size:17px;">
+                            <ion-grid>
+                              <ion-row style="text-align: center;">
+                                  <ion-col style="text-align: center;">
+                                     {{attribute_head_one}}: <b>{{colorButtonTitle}}</b>
+                                  </ion-col>
+                              </ion-row>
+                                <ion-row style="text-align: center;">
+                                    <ion-col size ="2" *ngFor="let color_list_image of colorswatchArray;let cnt=index;" style="margin: auto;text-align: center;">
+                                     
+                                      <div *ngIf="(color_list_image.swatch_colour != '' && color_list_image.swatch_colour != null)" [style]="color_list_image.bordercss+'margin: auto;width:50px;height:50px;background-color:'+color_list_image.swatch_colour+';'" (click)="change_slide_image_and_slide_to_first_from_swatch_colour(color_list_image,cnt);"></div>
+
+                                      <div *ngIf="(color_list_image.swatch_colour == '' || color_list_image.swatch_colour == null)" [style]="color_list_image.bordercss+'margin: auto;width:50px;height:50px;background-image:url('+color_list_image.swatch_image+');'" (click)="change_slide_image_and_slide_to_first_from_swatch_colour(color_list_image,cnt);"></div>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                          </ion-col>
+                      </ion-row>
+                        <ion-row  *ngIf="colorArray?.length > 0 && colorswatchArray?.length == 0">
+                            <ion-col>
+                                <ion-button expand="block" (click)="openColourPicker()" style="font-size: smaller;">{{colorButtonTitle}}</ion-button>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row *ngIf="attribute_count > 1">
+                            <ion-col [size]="size_extra_info.link!=''?8:12">
+                                <ion-button [disabled]="sizeArray?.length > 0 ? false : true" expand="block" (click)="openSizePicker()"  style="font-size:smaller;">{{sizeButtonTitle}}</ion-button>
+                            </ion-col>
+                            <ion-col *ngIf="size_extra_info.link!=''" size="4" style="margin: auto;text-align: end;">
+                                <div> <ion-icon src="/assets/icon/ruler.svg" size="large"  (click)="extra_info_popup_open();"></ion-icon><span (click)="extra_info_popup_open();" style="border-bottom: 1px solid #000;padding-bottom: 3px;top: -10px;position: relative;">{{size_extra_info.title}}</span></div>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row *ngIf="(!outofstockerrflag)" style="margin-bottom:20px;">
+                            <ion-col>
+                                 <ion-button expand="block" color="tertiary" size="large" (click)="addToCart()" style="text-transform: none;">Add to Bag</ion-button>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row *ngIf="(outofstockerrflag)">
+                            <ion-col>
+                                <ion-text color="danger">
+                                <div style="width: 100%; text-align: center;"> Sorry,Out of Stock</div>
+                                </ion-text>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row style="margin-bottom:20px;">
+                            <ion-col style="text-align:center">
+                               <div> <ion-icon name="heart-outline" size="large" (click)="addToWishList()"></ion-icon><span #wishlistDivClick (click)="addToWishList()" style="border-bottom: 1px solid #000;padding-bottom: 3px;font-size:large;top: -10px;position: relative;">Add to Wishlist</span></div>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>
+                              
+                                <div style="font-size:larger;" class="product_code" *ngIf="product_details_description != '' && product_details_description != null"><b>Description</b></div>
+  
+                                <div [innerHTML] = "product_details_description | safeHtml"  style="text-align:justify;">
+                                </div>
+                                <div class="ion-text-justify" *ngIf="product_details_code != '' && product_details_code != null">
+                                    Code : {{product_details_code}}
+                                </div>
+                                <div style="margin-top:20px"></div>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+              
+  </ion-content>
+  <!-- Internnet Connection Check section-->
+ <app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>

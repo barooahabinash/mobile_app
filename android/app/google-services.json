@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1060984184917",
+    "project_id": "fir-visualsoft-co-uk-mobile",
+    "storage_bucket": "fir-visualsoft-co-uk-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060984184917:android:929b10465d793e41d574dc",
+        "android_client_info": {
+          "package_name": "com.visualsoft.vsdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060984184917-eivrpg6terf8b4p4mdha5oaafe4qj9d3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0ANXMbhn0hAPm8iX-TR1v9vVFkOtojaQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060984184917-eivrpg6terf8b4p4mdha5oaafe4qj9d3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,53 @@
+<ion-header>
+
+    <ion-toolbar>
+        <ion-title style="text-align:center">Filters</ion-title>
+        <ion-buttons slot="start">
+            <ion-back-button style="position: fixed;" (click)="ClosePopover()"></ion-back-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+<!--
+  <ion-toolbar>
+    <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title slot="start" >Filters</ion-title>
+  </ion-toolbar>
+-->
+
+</ion-header>
+
+<ion-content *ngIf="this.ApiConnectionService.onlineStatus">
+    <ion-grid style="height: 100%;">
+        <ion-row *ngFor="let data of availableFilters;">
+            
+            <app-filter-section
+            [name]="data.name"
+            [values]="data.values"
+            [type]="data.type"
+            (radioGroupChangeEvent)="radioGroupChange($event)"
+            (ionFocusEvent)="radioFocus($event)"  
+            (ionSelectEvent)="radioSelect($event)" 
+            (ionBlurEvent)="radioBlur()"
+            >
+            </app-filter-section>
+
+        </ion-row>
+    </ion-grid> 
+</ion-content>
+<ion-footer *ngIf="this.ApiConnectionService.onlineStatus">
+    <ion-toolbar>
+        <ion-row>
+            <ion-col>
+                <ion-button color="danger" expand="block" (click)="ClearPopover()">Clear</ion-button>
+                </ion-col>
+                <ion-col>
+                <ion-button color="success" expand="block" (click)="applyFilters()">Apply</ion-button>
+            </ion-col>
+        </ion-row>
+      </ion-toolbar>
+  </ion-footer>
+ <!-- Internnet Connection Check section-->
+ <app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>
+  

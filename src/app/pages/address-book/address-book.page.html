@@ -1,0 +1,52 @@
+<ion-header>
+      <ion-toolbar>
+            <ion-title style="text-align:center">Address Book</ion-title>
+            <ion-buttons slot="start">
+                <ion-back-button></ion-back-button>
+            </ion-buttons>
+      </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="(this.ApiConnectionService.onlineStatus  && viewEntered && addressbook_data?.length !== 0)" scrollEvents="true">
+      <ion-list>
+            <ion-radio-group  value="{{default_address_id}}"  (ionChange)="radioGroupChange()" #radioGroup>
+                  <ion-grid *ngFor="let data of addressbook_data" class="addressBookborder">
+                        <ion-row style="text-align: left;">
+                              <ion-col size="10" style="padding-left: 25px;"><div>{{data.name}}</div>
+                                    <div>{{data.address_1}} {{data.address_2}}</div>
+                                    <div>{{data.town}}</div>
+                                    <div>{{data.county}}</div>
+                                    <div>{{data.postcode}}</div>
+                                    <div style="margin-top: 10px;">Tel:{{data.telephone}}</div>
+                              </ion-col>
+                              <ion-col size="1"><ion-icon name="create-outline" (click)="edit_address(data.id)"></ion-icon></ion-col>
+                              <ion-col size="1"><ion-icon name="trash-outline" (click)="delete_address(data.id,data.is_default)"></ion-icon></ion-col>
+                        </ion-row>
+                        <ion-row style="text-align: left;">
+                              <ion-col size="12">
+                                    <ion-item lines="none" (click)="change_default_address(data.id,data.address_1,data.address_2)">
+                                          <ion-radio slot="start"  value="{{data.id}}"  color="tertiary">
+                                          </ion-radio>
+                                          <div *ngIf="data.is_default == 'Y'"><b>This is your default billing address</b></div><div *ngIf="data.is_default == 'N'">Set as default billing address</div>
+                                    </ion-item>
+                              </ion-col>
+                        </ion-row>
+                  </ion-grid>
+            </ion-radio-group>
+      </ion-list>
+</ion-content>
+<ion-footer *ngIf="(this.ApiConnectionService.onlineStatus)">
+      <ion-toolbar>
+            <ion-grid>
+                  <ion-row>
+                        <ion-col size="12">
+                              <ion-button expand="block" size="large" style="text-transform: none;font-weight: bold;" color="tertiary" (click)="addNewAddress()">Add New Address</ion-button>
+                        </ion-col>
+                  </ion-row>
+            </ion-grid>
+      </ion-toolbar>
+</ion-footer>
+<!-- Internnet Connection Check section-->
+<app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>
+
+

@@ -1,0 +1,79 @@
+<ion-header>
+        <ion-toolbar>
+            <ion-title style="text-align:center">Order History</ion-title>
+                <ion-buttons slot="start">
+                    <ion-back-button></ion-back-button>
+                </ion-buttons>
+        </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="(this.ApiConnectionService.onlineStatus  && viewEntered && orderhistory_data?.length !== 0)" scrollEvents="true">
+      <ion-refresher slot="fixed" pullFactor="1" pullMin="100" pullMax="200" (ionRefresh)="doRefresh($event)">
+            <ion-refresher-content
+            pullingIcon="chevron-down-circle-outline"
+            pullingText="Pull to refresh"
+            refreshingSpinner="circles"
+            refreshingText="Refreshing...">
+            </ion-refresher-content>
+      </ion-refresher>
+      <ion-grid *ngFor="let data of orderhistory_data" size="6" class="orderHistoryborder">
+            <ion-row style="text-align: left;">
+              <ion-col size="12"><div style="font-weight: bold;font-size: larger;">{{data.order_status}}</div><div style="margin-top: 5px;">{{data.order_summary_string}}</div></ion-col>
+            </ion-row>
+            <ion-row style="text-align: left;">
+                <ion-col size="3">Order Ref</ion-col>
+                <ion-col size="1">:</ion-col>
+                <ion-col size="8" style="font-weight: bold;">{{data.order_ref}}</ion-col>
+            </ion-row>
+            <ion-row style="text-align: left;">
+                <ion-col size="3">Order Date</ion-col>
+                <ion-col size="1">:</ion-col>
+                <ion-col size="8" style="font-weight: bold;">{{data.order_date}}</ion-col>
+            </ion-row>
+            <ion-row style="text-align: left;">
+                <ion-col size="3">Total</ion-col>
+                <ion-col size="1">:</ion-col>
+                <ion-col size="8" style="font-weight: bold;"> <div [innerHTML] = "data.orderTotal | safeHtml"  class="ion-text-justify"></div> 
+                </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let data_product of data.product_details | keyvalue" class="productTopborder" style="text-align: left;">
+                <ion-col size="2">
+                    <ion-thumbnail style="height: auto;width: auto;">
+                    <ion-img [src]="data_product.value.product_image_thumb" [alt]="data_product.value.product_image_alt_tag"  (ionImgDidLoad)="orderHistoryImage = true" style="height: auto;width: auto;"></ion-img>
+                    <ion-spinner [ngClass]="{'center':true}" *ngIf="!orderHistoryImage"></ion-spinner>
+                    </ion-thumbnail>
+                </ion-col>
+
+                <ion-col *ngIf="data_product.value.productTitle.length >= 32" class="horizontal-scroll-column" size="10">
+                    <span style="font-weight: bold;margin-top: 5px;" class="to-animate orderhistory-animation"><b>{{data_product.value.productTitle}}</b></span>
+                    <span style="font-size: smaller;display: block;">{{data_product.value.attribute_summary_string}}</span>
+                    <span style="font-weight: bold;display: block;margin-top: 5px;" [innerHTML] = "data_product.value.productTotal | safeHtml"  class="ion-text-justify"></span>
+                    <span style="font-size: normal;display: block;margin-top: 5px;" *ngIf="data_product.value.order_product_state_name !=''">Product Status: <b>{{data_product.value.order_product_state_name}}</b></span>
+                    <span style="font-size: normal;display: block;margin-top: 5px;" *ngIf="data_product.value.returnInfoText !=''">{{data_product.value.returnInfoText}}</span>
+                </ion-col>
+                <ion-col *ngIf="data_product.value.productTitle.length < 32" size="10">
+                    <span style="font-weight: bold;margin-top: 5px" class="to-animate orderhistory-animation"><b>{{data_product.value.productTitle}}</b></span>
+                    <span style="font-size: smaller;display: block;margin-top: 5px;">{{data_product.value.attribute_summary_string}}</span>
+                    <span style="font-weight: bold;display: block;margin-top: 5px;" [innerHTML] = "data_product.value.productTotal | safeHtml"  class="ion-text-justify"></span>
+                    <span style="font-size: normal;display: block;margin-top: 5px;" *ngIf="data_product.value.order_product_state_name !=''">Product Status: <b>{{data_product.value.order_product_state_name}}</b></span>
+                    <span style="font-size: normal;display: block;margin-top: 5px;" *ngIf="data_product.value.returnInfoText !=''">{{data_product.value.returnInfoText}}</span>
+                </ion-col>
+            </ion-row>
+      </ion-grid>
+</ion-content>
+<ion-content *ngIf="((this.ApiConnectionService.onlineStatus && viewEntered) && (orderhistory_data === null || orderhistory_data?.length ===0))" style="text-align:center;height:100%;width: 100%;">
+    <ion-refresher slot="fixed" pullFactor="1" pullMin="100" pullMax="200" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+        pullingIcon="chevron-down-circle-outline"
+        pullingText="Pull to refresh"
+        refreshingSpinner="circles"
+        refreshingText="Refreshing...">
+        </ion-refresher-content>
+    </ion-refresher>
+    <div style="text-align:center;margin-top: 50%;">
+        <h6>No order items in list!</h6>
+    </div>
+</ion-content>
+<!-- Internnet Connection Check section-->
+ <app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>
+

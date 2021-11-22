@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">VS Fashion Demo</string>
+    <string name="title_activity_main">VS Fashion Demo</string>
+    <string name="package_name">com.visualsoft.vsdemo</string>
+    <string name="custom_url_scheme">com.visualsoft.vsdemo</string>
+</resources>

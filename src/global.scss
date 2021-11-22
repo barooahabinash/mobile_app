@@ -1,0 +1,288 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+/* Start Search box custamisation Added by lijo */
+.searchbar-input.sc-ion-searchbar-md {
+  border-radius: 10px;
+  border:1px solid rgb(224, 216, 216);
+  background-position: left 8px center;
+  height: auto;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+/* End Search box custamisation Added by lijo */
+
+/* Start popover custamisation Added by lijo */
+ion-popover{
+      ion-backdrop{
+          opacity: 0.7 !important;
+      }
+      .popover-wrapper{
+          .popover-content{
+              width:80%;
+              height:70%;
+          }
+      }
+  }
+
+ /* End popover custamisation Added by lijo */ 
+/* Start Added by lijo */
+ ion-button {
+    text-transform: none;
+   }
+ /* End Added by lijo */  
+/* Start Login & registration page css Added by lijo */ 
+ .log_reg_form ion-item {
+    --border-width: 1px 1px 1px 1px;
+    --border-radius: 5px 5px 5px 5px;
+    //--border-color: var(--ion-color-danger, #f1453d);
+    margin-top: 5px;
+  }
+  .log_reg_form ion-item.ion-invalid {
+    --highlight-background: none;
+  }
+  .log_reg_form ion-item.item-has-focus.ion-invalid {
+    --highlight-background: none;
+    --border-color:var(--ion-color-danger, #f1453d);
+  }
+  .log_reg_form ion-item.ion-invalid.ion-touched {
+    --highlight-background: none;
+    --border-color:var(--ion-color-danger, #f1453d);
+  }
+  
+  .log_reg_form ion-item.ion-invalid.ion-dirty.ion-touched {
+    --highlight-background: none;
+    --border-color:var(--ion-color-danger, #f1453d);
+  }
+  .log_reg_form ion-item.item-has-focus.ion-valid {
+    --highlight-background: none;
+    --border-color:var(--ion-color-success, #69bb7b);
+  }
+
+  .log_reg_form_label
+  {
+    font-weight: bold;
+    color: black;
+  } 
+
+  .log_reg_form_submit ion-item.ion-invalid {
+    --highlight-background: none;
+    --border-color:var(--ion-color-danger, #f1453d);
+  }
+  .postcode_button_submit ion-item.ion-invalid {
+    --highlight-background: none;
+    --border-color:var(--ion-color-danger, #f1453d);
+  }
+
+   .post_code_button
+   {
+    width: 100%;
+    height: 48px;
+    margin-top: 24px;
+    font-size: larger;
+   }
+ /* End Login & registration page css Added by lijo */   
+
+ #notification-button {            
+  position: relative;
+  width: 62px;
+  height: 62px;
+  top:1px;
+  right: 1px;
+  overflow: visible!important;
+}
+
+ .ios #notifications-badge {
+  padding-top: 6px;
+  background: #ABC0EF !important;
+  color: black;
+  position: absolute;
+  top: 0px;
+  right: -1px;
+  border-radius: 100%;
+  min-width:50%;
+  min-height: 40%;
+ }
+
+ .md #notifications-badge {
+  padding-top: 6px;
+  background: #ABC0EF !important;
+  color: black;
+  position: absolute;
+  top: -7px;
+  right: -5px;
+  border-radius: 100%;
+  min-width:60%;
+  min-height: 40%;
+ }
+
+ ion-toast {
+   --height: 60px;
+ }
+
+ .big-toast { 
+   position: fixed;
+   top: -41px;
+   opacity: .98;
+  --border-color: lightgrey;
+  --border-style: solid;
+  --border-width: 0px;
+  --color: black;
+  --border-radius:0;
+  --background:white;
+  --height: 18% !important;
+  --box-shadow: 1px -19px 23px -3px rgb(0 0 0 / 0.3);
+  --start: 0;
+  --end: 0;
+  --button-color:white
+}
+
+ion-loading .loading-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+ion-loading .loading-wrapper ion-spinner {
+  color: white !important;
+  transform: scale(2) !important;
+}
+
+
+/**
+---------------------------------------------------------------------
+Horizontal text scrolling animation for cart, wishlist and checkout.
+---------------------------------------------------------------------
+*/
+
+.horizontal-scroll-column  {
+  white-space: nowrap;
+  overflow-x: scroll;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 10px;
+  overflow: hidden;
+
+  .to-animate {
+    white-space: nowrap;
+    display: inline-flex;
+  }
+
+  .to-animate.cart-animation {
+    animation: backAndForthCart 10s linear infinite;
+  }
+
+  .to-animate.wishlist-animation {
+    animation: backAndForthWishlist 10s linear infinite;
+  }
+
+  .to-animate.checkout-animation {
+    animation: backAndForthCheckout 10s linear infinite;
+  }
+  .to-animate.orderhistory-animation {
+    animation: backAndForthOrderHistory 10s linear infinite;
+  }
+}
+
+@keyframes backAndForthCart {
+  0% { transform: translateX(0); }
+  10% { transform: translateX(0); }
+  45% { transform: translateX(calc(-100% + 165px)); }
+  55% { transform: translateX(calc(-100% + 165px)); } 
+  90% { transform: translateX(0); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes backAndForthWishlist {
+  0% { transform: translateX(0); }
+  10% { transform: translateX(0); }
+  45% { transform: translateX(calc(-100% + 255px)); }
+  55% { transform: translateX(calc(-100% + 255px)); } 
+  90% { transform: translateX(0); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes backAndForthCheckout {
+  0% { transform: translateX(0); }
+  10% { transform: translateX(0); }
+  45% { transform: translateX(calc(-100% + 250px)); }
+  55% { transform: translateX(calc(-100% + 250px)); } 
+  90% { transform: translateX(0); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes backAndForthOrderHistory {
+  0% { transform: translateX(0); }
+  10% { transform: translateX(0); }
+  45% { transform: translateX(calc(-100% + 310px)); }
+  55% { transform: translateX(calc(-100% + 310px)); } 
+  90% { transform: translateX(0); }
+  100% { transform: translateX(0); }
+}
+
+/**
+---------------------------------------------------------------------
+Miscellaneous
+---------------------------------------------------------------------
+*/
+.no-side-padding {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+/** product list and search page mobile and tablet layout   start *****/
+@media screen and (max-device-width: 500px) {  //mobile
+        .product_ion_card_col {
+            width: 100%;
+            height: 100%;
+            margin: auto;
+            box-shadow: none;
+        }
+  }
+@media screen and (min-device-width: 501px) { //tablet
+
+        .product_filter {
+          padding-top: 1% !important;
+        }
+
+        .product_ion_card_col{
+            width: 85%;
+            height: 100%;
+            margin: auto;
+            box-shadow: none;
+            //float: right;
+
+            /*
+            ion-img {
+              margin: auto;
+            }
+
+            ion-card-subtitle {
+              margin: 0 2rem 0 3rem;
+            }
+            */
+        }
+    }
+/** product list and search page  end mobile and tablet layout *****/    

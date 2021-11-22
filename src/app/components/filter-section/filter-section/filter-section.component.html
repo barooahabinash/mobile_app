@@ -1,0 +1,25 @@
+
+  <ion-row class="filterSection" (click)="toggleSubItems()">
+        <ion-col no-padding>
+            <div class="ion-text-justify" style="margin-bottom: 4px;">
+            <h6>{{name}}</h6>
+            </div>
+        </ion-col>
+        <ion-col>
+            <ion-icon name="{{ showSubItems ? 'remove-outline' : 'add-outline' }}"></ion-icon>
+        </ion-col>
+  </ion-row>
+  <ion-row *ngFor="let item of values" class="filterlistborder">
+        <ion-col *ngIf="showSubItems">
+          <ion-radio-group allow-empty-selection="true" name="radio-group" value="{{item.selected}}" (ionChange)="radioGroupChange(type+'*#*'+item.id)" #radioGroup>
+            <ion-item style="height: 25px;padding-top: 0px;" (ionFocus)="radioFocusChange($event)"  (ionSelect)="radioSelectChange($event)" (ionBlur)="radioBlurChange()" lines="none">
+             
+                <ion-radio style="margin-top: -10px;" slot="end" name="{{item.name}}" value="true"  color="tertiary">
+                </ion-radio>
+                <ion-label style="margin-top: -10px;">{{item.name}}</ion-label>
+            </ion-item>
+        </ion-radio-group>
+        </ion-col>
+  </ion-row>
+
+

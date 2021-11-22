@@ -1,0 +1,89 @@
+<ion-menu side="end" menuId="custom" contentId="main" class="my-custom-menu" width = "600">
+  <ion-content>
+    <app-cart></app-cart>
+  </ion-content>
+</ion-menu>
+<ion-router-outlet id="main"></ion-router-outlet>
+
+<ion-header>
+  <ion-toolbar>
+      <ion-searchbar placeholder="What are you looking for?" style="margin-left: 10px;" (search)="toSearchPage()" [(ngModel)]="searchValue"></ion-searchbar>   
+      <ion-buttons slot="end">
+      <ion-button id="notification-button" (click) = "openCart()">
+        <ion-icon  src="/assets/icon/bag.svg" slot="icon-only" no-margin class="white top-btn"></ion-icon>
+        <ion-badge id="notifications-badge" color="danger">{{CartService.cartCount}}</ion-badge>
+      </ion-button>  
+    </ion-buttons>  
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="this.ApiConnectionService.onlineStatus">
+    <ion-refresher slot="fixed" pullFactor="1" pullMin="100" pullMax="200" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+        pullingIcon="chevron-down-circle-outline"
+        pullingText="Pull to refresh"
+        refreshingSpinner="circles"
+        refreshingText="Refreshing...">
+        </ion-refresher-content>
+    </ion-refresher>
+    <div *ngFor="let widget_item of widget_array;">
+        <ion-slides  style="width: 100%;" autoplay = "true" [pager] = "(widget_item.type=='full_width_promo' && widget_item.images.length > 1)?'true':'false'" [options]="widget_item.slide_options" #adSlider *ngIf="widget_item.type=='full_width_promo'">
+            <ion-slide *ngFor="let fullWidthProm of widget_item.images">
+              <ion-img [src]="fullWidthProm.image" (ionImgDidLoad)="mainPromoImage = true" (click)="homepagePromo(fullWidthProm)" [style]="'max-width:'+widget_item.image_modified_details.width+'px;'+'max-height:'+widget_item.image_modified_details.height+'px;'"></ion-img>
+              <!-- //Abinash uncomment the code to add the spinner for main promo
+                 <ion-spinner [ngClass]="{'center':true}" *ngIf="!mainPromoImage"></ion-spinner> -->
+            </ion-slide>
+        </ion-slides>
+        <div *ngIf="widget_item.type=='pair_promo'" class="mainDiv" [style]="'max-width:'+widget_item.image_modified_details.width+'px;'+'max-height:'+widget_item.image_modified_details.height+'px;'">
+            <div  class="boxesleft" [style]="'max-height:'+widget_item.image_modified_details.height+'px;'"> <!-- Any issue in alignment just delete style and check.Added [style]="'max-height:'+widget_item.image_modified_details.height+'px;'" on 26/08/21-->
+                <ion-img [src]="widget_item.images[0].image" (ionImgDidLoad)="pairPromoImage = true" (click)="homepagePromo(widget_item.images[0])"></ion-img>
+                <ion-spinner [ngClass]="{'center':true}" *ngIf="!pairPromoImage"></ion-spinner>
+            </div>
+            <div  class="boxesright" [style]="'max-height:'+widget_item.image_modified_details.height+'px;'"> <!-- Any issue in alignment just delete style and check.Added [style]="'max-height:'+widget_item.image_modified_details.height+'px;'" on 26/08/21-->
+              <ion-img [src]="widget_item.images[1].image" (ionImgDidLoad)="pairPromoImage = true" (click)="homepagePromo(widget_item.images[1])"></ion-img>
+              <ion-spinner [ngClass]="{'center':true}" *ngIf="!pairPromoImage"></ion-spinner>
+          </div>
+        </div>
+          <ion-grid *ngIf="widget_item.type=='product_slider'" >
+              <ion-row style="border-bottom: 1px solid rgb(224, 216, 216);">
+                  <ion-col size="10">
+                    <h4 (click)="homepagePromo(widget_item)">{{widget_item.display_name}}</h4>
+                  </ion-col>
+                  <ion-col size="2" style="text-align: end;color:rgb(224, 216, 216) ;">
+                    <h3 (click)="homepagePromo(widget_item)">></h3>
+                </ion-col>
+              </ion-row>
+          </ion-grid>
+          <div class="scrolling-wrapper" *ngIf="widget_item.type=='product_slider'" [style]="'padding-top: 0px;max-height:'+widget_item.options.image_modified_details.height+'px;'">
+              <div class="card" *ngFor="let products_item of widget_item.products" style="text-align:center;font-size:small;">
+                  <ion-grid (click)="homepagePromo(products_item)">
+                      <ion-row [style]="'max-width:'+widget_item.options.image_modified_details.width+'px;'+'max-height:'+widget_item.options.image_modified_details.height+'px;'">
+                          <ion-col><ion-img [src]="widget_item.options.image_url_prefix+''+products_item.image" (ionImgDidLoad)="productImage = true"></ion-img>
+                            <ion-spinner [ngClass]="{'center':true}" *ngIf="!productImage"></ion-spinner></ion-col>
+                      </ion-row>
+                      <ion-row [style]="'max-width:'+widget_item.options.image_modified_details.width+'px;'+'max-height: 130px;'" *ngIf="widget_item.options.show_name==true || widget_item.options.show_price==true">
+                          <ion-col> 
+                          
+                            <span style="white-space: pre-line"  *ngIf="widget_item.options.show_name==true">{{products_item.display_name}}</span>
+                            <span style='text-decoration:line-through' *ngIf="(widget_item.options.show_price==true  && (products_item.sale_price))">
+                              {{widget_item.options.sale_price_full_prefix}} <span [innerHTML]="widget_item.options.currency.position=='before'?widget_item.options.currency.symbol+''+products_item.price+''+widget_item.options.currency.postfix:products_item.price+''+widget_item.options.currency.symbol+''+widget_item.options.currency.postfix"></span>
+                            </span>
+                            <span [style]="widget_item.options.sale_price_style" *ngIf="(widget_item.options.show_price==true  && (products_item.sale_price))">
+                            <br>{{widget_item.options.sale_price_prefix}}{{(products_item.multi_price!=undefined && products_item.multi_price==true) ? widget_item.options.multi_price_prefix : ''}}
+                            <span [innerHTML]="widget_item.options.currency.position=='before'?widget_item.options.currency.symbol+''+products_item.sale_price+''+widget_item.options.currency.postfix:products_item.sale_price+''+widget_item.options.currency.symbol+''+widget_item.options.currency.postfix"></span>
+                            </span>  
+                            <span [style]="'white-space: pre-line;'+widget_item.options.price_style" *ngIf="(widget_item.options.show_price==true  && (!products_item.sale_price))"><br *ngIf="widget_item.options.show_name==true">
+                              {{(products_item.multi_price!=undefined && products_item.multi_price==true) ? widget_item.options.multi_price_prefix : ''}}<span [innerHTML]="widget_item.options.currency.position=='before'?widget_item.options.currency.symbol+''+products_item.price+''+widget_item.options.currency.postfix:products_item.price+''+widget_item.options.currency.symbol+''+widget_item.options.currency.postfix"></span>
+                            </span>
+
+                           
+                          </ion-col>
+                      </ion-row>
+                  </ion-grid>
+              </div>
+          </div>
+      </div>
+  <!-- <app-explore-container name="Shopping page"></app-explore-container> -->
+</ion-content>
+ <!-- Internnet Connection Check section-->
+ <app-connection-check (retryReloadPageContent)="retry_page_content()"></app-connection-check>

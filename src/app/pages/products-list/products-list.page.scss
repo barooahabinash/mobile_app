@@ -1,0 +1,93 @@
+.img-loaded + ion-spinner {
+    display:none;
+  }
+  .center{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+  .product_count_filter{
+    width: 100%;
+    height: 40px;
+    font-size: large;
+    text-align: center;
+    margin: auto;
+    background-color: rgb(241, 241, 241);
+  }
+  .product_count
+  {
+    float:left; 
+    display:inline;
+    height: 100%;
+    padding-top: 2%;
+  }
+  .product_filter
+  {
+    display:inline;
+    width: 100%;
+    height: 100%;
+    font-weight: bold;
+    float: right;
+    padding-top: 2%;
+    border-left: 1px solid darkgrey;
+  }
+/*
+  ion-content{
+
+    --ion-background-color:#c0c0c0;
+}*/
+
+.sash_position_b
+{
+  position: absolute;
+  bottom: 0px;
+  text-align: center;
+}
+.sash_position_bl
+{
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  text-align: center;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.sash_position_br
+{
+  position: absolute;
+  bottom: 0px;
+  right: 0px; //19px
+  text-align: center;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.sash_position_t
+{
+  position: absolute;
+  top: 0px;
+  text-align: center;
+}
+.sash_position_tl
+{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  text-align: center;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.sash_position_tr
+{
+  position: absolute;
+  top: 0px;
+  right: 0px; //19px
+  text-align: center;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.ios ion-searchbar {
+  padding-top:16px ;
+}
+.ios ion-back-button{
+  padding-top:16px;
+  }

@@ -1,0 +1,25 @@
+<ion-content [fullscreen]="true" *ngIf="!(this.ApiConnectionService.onlineStatus)"  style="height: 100%;width:100%;position: relative;">
+  <ion-grid style="text-align: center;width:100%;position: absolute;top: 50%; -ms-transform: translateY(-50%);transform: translateY(-50%);color:gray;">
+      <ion-row>
+          <ion-col>
+              <ion-icon  name="globe-outline"  style="position:relative;zoom:4.0;color:rgb(216, 216, 216);"></ion-icon><ion-icon  name="alert-circle-outline" style="color:rgb(110, 109, 109);zoom:2.0;position: absolute;top: calc(50% - 3px);
+              left: calc(50% - 1px);"></ion-icon>
+          </ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col>
+             <b>Connection Error</b>
+          </ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col>
+             Please ensure you are <br>connected to the internnet.
+          </ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col>
+              <ion-button color="medium" fill="outline" (click)="reload_page_content();">Retry</ion-button>
+          </ion-col>
+      </ion-row>
+  </ion-grid>
+</ion-content>
